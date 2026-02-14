@@ -18,14 +18,14 @@ export const CACHE_TTL_PRICES_MS = 30 * 60 * 1000;              // 市場價格:
 
 // CraftType IDs from CraftType.csv, display names in Traditional Chinese
 export const CRAFTING_JOBS: CraftingJob[] = [
-  { displayName: '木工', craftTypeId: 0 },
-  { displayName: '鍛造', craftTypeId: 1 },
-  { displayName: '甲冑', craftTypeId: 2 },
-  { displayName: '金工', craftTypeId: 3 },
-  { displayName: '皮革', craftTypeId: 4 },
-  { displayName: '裁縫', craftTypeId: 5 },
-  { displayName: '鍊金', craftTypeId: 6 },
-  { displayName: '烹調', craftTypeId: 7 },
+  { displayName: '木工', craftTypeId: 0, icon: 'https://xivapi.com/cj/companion/carpenter.png' },
+  { displayName: '鍛造', craftTypeId: 1, icon: 'https://xivapi.com/cj/companion/blacksmith.png' },
+  { displayName: '甲冑', craftTypeId: 2, icon: 'https://xivapi.com/cj/companion/armorer.png' },
+  { displayName: '金工', craftTypeId: 3, icon: 'https://xivapi.com/cj/companion/goldsmith.png' },
+  { displayName: '皮革', craftTypeId: 4, icon: 'https://xivapi.com/cj/companion/leatherworker.png' },
+  { displayName: '裁縫', craftTypeId: 5, icon: 'https://xivapi.com/cj/companion/weaver.png' },
+  { displayName: '鍊金', craftTypeId: 6, icon: 'https://xivapi.com/cj/companion/alchemist.png' },
+  { displayName: '烹調', craftTypeId: 7, icon: 'https://xivapi.com/cj/companion/culinarian.png' },
 ];
 
 export const TOP_N = 5;

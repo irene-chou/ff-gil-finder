@@ -1,6 +1,7 @@
 export interface CraftingJob {
   displayName: string;
   craftTypeId: number;
+  icon: string;
 }
 
 export interface RecipeIngredient {
