@@ -91,14 +91,23 @@ function parseRecipe(row: XIVAPIRow): Recipe | null {
   };
 }
 
+export interface FetchProgress {
+  phase: 'recipes' | 'prices';
+  current: number;
+  total: number;
+  detail: string;
+}
+
 export async function fetchAllRecipes(
   craftTypeId: number,
   signal?: AbortSignal,
+  onProgress?: (p: FetchProgress) => void,
 ): Promise<Recipe[]> {
   const recipes: Recipe[] = [];
   const fields = 'ItemResult.value,ItemResult.Name,Ingredient[].value,Ingredient[].Name,AmountIngredient,AmountResult,RecipeLevelTable.ClassJobLevel,SecretRecipeBook.value';
   const query = `CraftType=${craftTypeId}`;
   let url: string | null = `${XIVAPI_BASE}/api/search?sheets=Recipe&query=${encodeURIComponent(query)}&fields=${fields}&limit=500`;
+  let page = 0;
 
   while (url) {
     const data: XIVAPISearchResponse = await fetchWithRetry<XIVAPISearchResponse>(url, signal);
@@ -107,6 +116,14 @@ export async function fetchAllRecipes(
       const recipe = parseRecipe(row);
       if (recipe) recipes.push(recipe);
     }
+
+    page++;
+    onProgress?.({
+      phase: 'recipes',
+      current: recipes.length,
+      total: 0,
+      detail: `已取得 ${recipes.length} 個配方（第 ${page} 頁）`,
+    });
 
     if (data.next) {
       url = `${XIVAPI_BASE}/api/search?sheets=Recipe&query=${encodeURIComponent(query)}&fields=${fields}&limit=500&cursor=${data.next}`;

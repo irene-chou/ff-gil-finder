@@ -5,6 +5,7 @@ import {
   INITIAL_BACKOFF_MS,
 } from '@shared/constants.js';
 import type { MarketPriceInfo } from '@shared/types.js';
+import type { FetchProgress } from './xivapi';
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -72,9 +73,11 @@ export async function fetchMarketPrices(
   world: string,
   itemIds: number[],
   signal?: AbortSignal,
+  onProgress?: (p: FetchProgress) => void,
 ): Promise<Map<number, MarketPriceInfo>> {
   const priceMap = new Map<number, MarketPriceInfo>();
   const uniqueIds = [...new Set(itemIds.filter(id => id > 0))];
+  const total = uniqueIds.length;
 
   for (let i = 0; i < uniqueIds.length; i += UNIVERSALIS_BATCH_SIZE) {
     const batch = uniqueIds.slice(i, i + UNIVERSALIS_BATCH_SIZE);
@@ -94,6 +97,14 @@ export async function fetchMarketPrices(
         }
       }
     }
+
+    const fetched = Math.min(i + UNIVERSALIS_BATCH_SIZE, total);
+    onProgress?.({
+      phase: 'prices',
+      current: fetched,
+      total,
+      detail: `市場價格 ${fetched}/${total} 個物品`,
+    });
   }
 
   return priceMap;

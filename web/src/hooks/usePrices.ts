@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchMarketPrices } from '../lib/universalis';
+import type { FetchProgress } from '../lib/xivapi';
 import type { Recipe } from '@shared/types.js';
 
 function collectItemIds(recipes: Recipe[]): number[] {
@@ -16,11 +18,18 @@ export function usePrices(
   world: string,
   craftTypeId: number | null,
 ) {
-  return useQuery({
+  const [progress, setProgress] = useState<FetchProgress | null>(null);
+
+  const query = useQuery({
     queryKey: ['prices', world, craftTypeId],
-    queryFn: ({ signal }) => fetchMarketPrices(world, collectItemIds(recipes!), signal),
+    queryFn: ({ signal }) => {
+      setProgress(null);
+      return fetchMarketPrices(world, collectItemIds(recipes!), signal, setProgress);
+    },
     enabled: !!recipes && recipes.length > 0 && craftTypeId !== null,
     staleTime: 30 * 60 * 1000, // 30 minutes
     gcTime: 60 * 60 * 1000,
   });
+
+  return { ...query, progress };
 }

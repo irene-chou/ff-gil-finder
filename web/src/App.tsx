@@ -33,7 +33,7 @@ function AppContent() {
     [setJobParam],
   );
 
-  const { data, itemNames, isLoading, error, isLoadingRecipes, isLoadingPrices } =
+  const { data, itemNames, isLoading, error, isLoadingRecipes, isLoadingPrices, progress } =
     useProfitAnalysis(selectedJob?.craftTypeId ?? null, world);
 
   return (
@@ -57,6 +57,7 @@ function AppContent() {
         <LoadingState
           isLoadingRecipes={isLoadingRecipes}
           isLoadingPrices={isLoadingPrices}
+          progress={progress}
         />
       )}
 
