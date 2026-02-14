@@ -8,6 +8,7 @@ export function ErrorMessage({ error }: Props) {
     <div className="rounded-lg bg-red-900/20 border border-red-800/40 p-4 text-red-300">
       <p className="font-medium">出事了 💀</p>
       <p className="text-sm mt-1 text-red-400">{message}</p>
+      <p className="text-sm mt-2 text-red-400/70">請嘗試刷新復活</p>
     </div>
   );
 }
