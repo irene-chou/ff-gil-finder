@@ -57,9 +57,6 @@ interface XIVAPISearchResponse {
 function parseRecipe(row: XIVAPIRow): Recipe | null {
   const { fields } = row;
 
-  // Skip recipes that require a secret recipe book (秘笈)
-  if (fields.SecretRecipeBook && fields.SecretRecipeBook.value > 0) return null;
-
   const resultItemId = fields.ItemResult?.value;
   if (!resultItemId) return null;
 
@@ -88,6 +85,7 @@ function parseRecipe(row: XIVAPIRow): Recipe | null {
     resultItemId,
     amountResult: fields.AmountResult ?? 1,
     level: fields.RecipeLevelTable?.fields?.ClassJobLevel ?? 0,
+    requiresBook: !!(fields.SecretRecipeBook && fields.SecretRecipeBook.value > 0),
     ingredients,
   };
 }

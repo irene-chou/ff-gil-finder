@@ -1,7 +1,11 @@
 import { MARKET_TAX_RATE } from './constants.js';
-import type { MarketPriceInfo, ProfitResult, Recipe } from './types.js';
+import type { MarketPriceInfo, ProfitFilters, ProfitResult, Recipe } from './types.js';
 
-const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+const DEFAULT_FILTERS: ProfitFilters = {
+  maxLevel: null,
+  skipBook: true,
+  saleDays: 1,
+};
 
 /** Format lastSaleTime (seconds) as relative time string */
 function formatFreshness(timestampSec: number): string {
@@ -17,18 +21,27 @@ function formatFreshness(timestampSec: number): string {
 export function calculateProfits(
   recipes: Recipe[],
   priceMap: Map<number, MarketPriceInfo>,
+  filters: Partial<ProfitFilters> = {},
 ): ProfitResult[] {
+  const { maxLevel, skipBook, saleDays } = { ...DEFAULT_FILTERS, ...filters };
+  const saleCutoffMs = saleDays * 24 * 60 * 60 * 1000;
   const results: ProfitResult[] = [];
   const now = Date.now();
 
   for (const recipe of recipes) {
+    // Filter: skip secret recipe book recipes
+    if (skipBook && recipe.requiresBook) continue;
+
+    // Filter: level cap
+    if (maxLevel !== null && recipe.level > maxLevel) continue;
+
     const resultPrice = priceMap.get(recipe.resultItemId);
     if (!resultPrice || !resultPrice.hasData || resultPrice.minPrice === 0) continue;
 
-    // Skip if the crafted item has no recent sale within 1 day
+    // Filter: recent sale within N days
     if (!resultPrice.lastSaleTime) continue;
     const saleAgeMs = now - resultPrice.lastSaleTime * 1000;
-    if (saleAgeMs > ONE_DAY_MS) continue;
+    if (saleAgeMs > saleCutoffMs) continue;
 
     let craftingCost = 0;
     let skipRecipe = false;

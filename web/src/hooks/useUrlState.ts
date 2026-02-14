@@ -6,10 +6,14 @@ function readParam(key: string, fallback: string): string {
   return params.get(key) ?? fallback;
 }
 
-/** Write a URL search param without reloading the page. */
+/** Write a URL search param without reloading the page. Empty values remove the param. */
 function writeParam(key: string, value: string) {
   const url = new URL(window.location.href);
-  url.searchParams.set(key, value);
+  if (value) {
+    url.searchParams.set(key, value);
+  } else {
+    url.searchParams.delete(key);
+  }
   window.history.replaceState(null, '', url.toString());
 }
 

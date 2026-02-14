@@ -3,17 +3,22 @@ import { useRecipes } from './useRecipes';
 import { usePrices } from './usePrices';
 import { useItemNames } from './useItemNames';
 import { calculateProfits } from '@shared/calculator.js';
+import type { ProfitFilters } from '@shared/types.js';
 import type { FetchProgress } from '../lib/xivapi';
 
-export function useProfitAnalysis(craftTypeId: number | null, world: string) {
+export function useProfitAnalysis(
+  craftTypeId: number | null,
+  world: string,
+  filters: ProfitFilters,
+) {
   const recipesQuery = useRecipes(craftTypeId);
   const pricesQuery = usePrices(recipesQuery.data, world, craftTypeId);
   const namesQuery = useItemNames();
 
   const results = useMemo(() => {
     if (!recipesQuery.data || !pricesQuery.data) return undefined;
-    return calculateProfits(recipesQuery.data, pricesQuery.data);
-  }, [recipesQuery.data, pricesQuery.data]);
+    return calculateProfits(recipesQuery.data, pricesQuery.data, filters);
+  }, [recipesQuery.data, pricesQuery.data, filters]);
 
   const progress: FetchProgress | null = recipesQuery.isFetching
     ? recipesQuery.progress

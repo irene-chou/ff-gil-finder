@@ -1,11 +1,12 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { QueryClient } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
-import type { CraftingJob } from '@shared/types.js';
+import type { CraftingJob, ProfitFilters } from '@shared/types.js';
 import { CRAFTING_JOBS, DEFAULT_WORLD } from '@shared/constants.js';
 import { createIDBPersister } from './lib/idb-persister';
 import { WorldSelector } from './components/WorldSelector';
 import { JobSelector } from './components/JobSelector';
+import { FilterPanel } from './components/FilterPanel';
 import { ResultsTable } from './components/ResultsTable';
 import { LoadingState } from './components/LoadingState';
 import { ErrorMessage } from './components/ErrorMessage';
@@ -16,29 +17,29 @@ const queryClient = new QueryClient();
 const persister = createIDBPersister();
 const PERSIST_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-function findJob(idStr: string | null): CraftingJob | null {
-  if (idStr === null) return null;
-  const id = Number(idStr);
-  return CRAFTING_JOBS.find((j) => j.craftTypeId === id) ?? null;
-}
-
 function AppContent() {
   const [world, setWorld] = useUrlState('world', DEFAULT_WORLD);
-  const [jobParam, setJobParam] = useUrlState('job', '');
-  const [selectedJob, setSelectedJobInternal] = useState<CraftingJob | null>(
-    () => findJob(jobParam || null),
-  );
+  const [selectedJob, setSelectedJob] = useState<CraftingJob | null>(null);
 
-  const setSelectedJob = useCallback(
-    (job: CraftingJob) => {
-      setSelectedJobInternal(job);
-      setJobParam(String(job.craftTypeId));
-    },
-    [setJobParam],
-  );
+  // Filters with URL persistence
+  const [maxLevelParam, setMaxLevelParam] = useUrlState('maxLv', '');
+  const [skipBookParam, setSkipBookParam] = useUrlState('skipBook', '1');
+  const [saleDaysParam, setSaleDaysParam] = useUrlState('saleDays', '1');
+
+  const filters: ProfitFilters = useMemo(() => ({
+    maxLevel: maxLevelParam ? Number(maxLevelParam) : null,
+    skipBook: skipBookParam !== '0',
+    saleDays: Number(saleDaysParam) || 1,
+  }), [maxLevelParam, skipBookParam, saleDaysParam]);
+
+  const setFilters = useCallback((f: ProfitFilters) => {
+    setMaxLevelParam(f.maxLevel !== null ? String(f.maxLevel) : '');
+    setSkipBookParam(f.skipBook ? '1' : '0');
+    setSaleDaysParam(String(f.saleDays));
+  }, [setMaxLevelParam, setSkipBookParam, setSaleDaysParam]);
 
   const { data, itemNames, isLoading, error, isLoadingRecipes, isLoadingPrices, progress } =
-    useProfitAnalysis(selectedJob?.craftTypeId ?? null, world);
+    useProfitAnalysis(selectedJob?.craftTypeId ?? null, world, filters);
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -56,9 +57,11 @@ function AppContent() {
         onSelect={setSelectedJob}
       />
 
+      <FilterPanel filters={filters} onChange={setFilters} />
+
       {error && <ErrorMessage error={error} />}
 
-      {isLoading && selectedJob && (
+      {isLoading && selectedJob !== null && (
         <LoadingState
           isLoadingRecipes={isLoadingRecipes}
           isLoadingPrices={isLoadingPrices}
@@ -66,7 +69,7 @@ function AppContent() {
         />
       )}
 
-      {data && selectedJob && (
+      {data && selectedJob !== null && (
         <ResultsTable
           results={data}
           world={world}
@@ -75,8 +78,8 @@ function AppContent() {
         />
       )}
 
-      {!selectedJob && (
-        <p className="text-gray-500 text-center py-8">👆 選一個職業，讓我幫你算算看</p>
+      {selectedJob === null && (
+        <p className="text-gray-500 text-center py-8">👆 選一個職業，讓我幫你算！</p>
       )}
 
       <footer className="mt-16 pt-6 border-t border-dark-700 text-xs text-gray-600 space-y-2">

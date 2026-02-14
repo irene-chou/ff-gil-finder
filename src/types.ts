@@ -15,6 +15,7 @@ export interface Recipe {
   resultItemId: number;
   amountResult: number;
   level: number;
+  requiresBook: boolean;
   ingredients: RecipeIngredient[];
 }
 
@@ -32,6 +33,12 @@ export interface MarketPriceInfo {
   lastSaleTime: number;         // recentHistory[0].timestamp (seconds), 0 if no sales
   hasData: boolean;
   listingsCount: number;
+}
+
+export interface ProfitFilters {
+  maxLevel: number | null;     // null = no limit
+  skipBook: boolean;           // true = hide secret recipe book recipes
+  saleDays: number;            // only show items sold within N days
 }
 
 export interface ProfitResult {
