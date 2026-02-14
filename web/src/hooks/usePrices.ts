@@ -27,8 +27,8 @@ export function usePrices(
       return fetchMarketPrices(world, collectItemIds(recipes!), signal, setProgress);
     },
     enabled: !!recipes && recipes.length > 0 && craftTypeId !== null,
-    staleTime: 30 * 60 * 1000, // 30 minutes
-    gcTime: 60 * 60 * 1000,
+    staleTime: 30 * 60 * 1000, // 30 min — after this, refetch in background
+    gcTime: 24 * 60 * 60 * 1000, // 24 hr — keep in IDB so refresh doesn't lose it
   });
 
   return { ...query, progress };

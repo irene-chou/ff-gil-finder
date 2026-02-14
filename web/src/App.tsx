@@ -1,7 +1,9 @@
 import { useState, useCallback } from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import type { CraftingJob } from '@shared/types.js';
 import { CRAFTING_JOBS, DEFAULT_WORLD } from '@shared/constants.js';
+import { createIDBPersister } from './lib/idb-persister';
 import { WorldSelector } from './components/WorldSelector';
 import { JobSelector } from './components/JobSelector';
 import { ResultsTable } from './components/ResultsTable';
@@ -11,6 +13,8 @@ import { useProfitAnalysis } from './hooks/useProfitAnalysis';
 import { useUrlState } from './hooks/useUrlState';
 
 const queryClient = new QueryClient();
+const persister = createIDBPersister();
+const PERSIST_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 function findJob(idStr: string | null): CraftingJob | null {
   if (idStr === null) return null;
@@ -80,8 +84,11 @@ function AppContent() {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{ persister, maxAge: PERSIST_MAX_AGE }}
+    >
       <AppContent />
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   );
 }
