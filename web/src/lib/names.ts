@@ -1,5 +1,5 @@
 export async function loadItemNames(): Promise<Map<number, string>> {
-  const res = await fetch('/item-names-tc.json');
+  const res = await fetch(`${import.meta.env.BASE_URL}item-names-tc.json`);
   if (!res.ok) throw new Error(`Failed to load item names: ${res.status}`);
   const data: Record<string, string> = await res.json();
   const map = new Map<number, string>();
