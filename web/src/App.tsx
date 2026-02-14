@@ -78,6 +78,24 @@ function AppContent() {
       {!selectedJob && (
         <p className="text-gray-500 text-center py-8">👆 選一個職業，讓我幫你算算看</p>
       )}
+
+      <footer className="mt-16 pt-6 border-t border-dark-700 text-xs text-gray-600 space-y-2">
+        <p>
+          市場資料由{' '}
+          <a href="https://universalis.app" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gold-400 transition-colors">Universalis</a>
+          {' '}提供，配方資料由{' '}
+          <a href="https://xivapi.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gold-400 transition-colors">XIVAPI</a>
+          {' '}提供，繁中翻譯由{' '}
+          <a href="https://github.com/thewakingsands/ffxiv-datamining-tc" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gold-400 transition-colors">The Waking Sands</a>
+          {' '}提供。感謝以上專案的開源貢獻。
+        </p>
+        <p>
+          價格為玩家上傳的板子快照，非即時資料，實際交易價格可能有落差。本站不保證資料正確性，利潤僅供參考。
+        </p>
+        <p className="text-gray-700">
+          FINAL FANTASY XIV &copy; SQUARE ENIX CO., LTD. All Rights Reserved.
+        </p>
+      </footer>
     </div>
   );
 }
