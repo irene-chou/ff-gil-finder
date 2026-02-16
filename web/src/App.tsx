@@ -53,7 +53,7 @@ function AppContent() {
             <p className="text-xs text-gray-500 mb-6">查了才知道是不是在浪費水晶 · <span className="text-gray-600">板子價格每秒都在變，僅供參考</span></p>
           </div>
           <a
-            href="https://github.com/irene-chou/ffxiv-is-it-worth"
+            href="https://github.com/irene-chou/ffxiv-gil-sniffer"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-500 hover:text-gold-400 transition-colors mt-1"

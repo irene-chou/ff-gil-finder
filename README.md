@@ -1,12 +1,12 @@
-# ffxiv-is-it-worth
+# ffxiv-gil-sniffer
 
 FFXIV crafting profit analyzer for Traditional Chinese servers.
 
 繁中服的製作利潤分析器——查了才知道是不是在浪費水晶。
 
-[![Deploy to GitHub Pages](https://github.com/irene-chou/ffxiv-is-it-worth/actions/workflows/deploy.yml/badge.svg)](https://github.com/irene-chou/ffxiv-is-it-worth/actions/workflows/deploy.yml)
+[![Deploy to GitHub Pages](https://github.com/irene-chou/ffxiv-gil-sniffer/actions/workflows/deploy.yml/badge.svg)](https://github.com/irene-chou/ffxiv-gil-sniffer/actions/workflows/deploy.yml)
 
-**[Live Demo / 線上版](https://irene-chou.github.io/ffxiv-is-it-worth/)**
+**[Live Demo / 線上版](https://irene-chou.github.io/ffxiv-gil-sniffer/)**
 
 ## Features / 功能
 
@@ -24,7 +24,7 @@ FFXIV crafting profit analyzer for Traditional Chinese servers.
 
 ### Web
 
-Visit the **[live demo](https://irene-chou.github.io/ffxiv-is-it-worth/)**, pick a crafting job, and go.
+Visit the **[live demo](https://irene-chou.github.io/ffxiv-gil-sniffer/)**, pick a crafting job, and go.
 
 ### CLI
 
@@ -41,8 +41,8 @@ Requires **Node.js 22+**.
 
 ```bash
 # Clone
-git clone https://github.com/irene-chou/ffxiv-is-it-worth.git
-cd ffxiv-is-it-worth
+git clone https://github.com/irene-chou/ffxiv-gil-sniffer.git
+cd ffxiv-gil-sniffer
 
 # Web app
 cd web

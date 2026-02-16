@@ -1,5 +1,5 @@
 {
-  "name": "ffxiv-is-it-worth",
+  "name": "ffxiv-gil-sniffer",
   "version": "1.0.0",
   "description": "FFXIV crafting profit analyzer - find the most profitable recipes to craft",
   "type": "module",

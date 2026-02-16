@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import path from 'node:path';
 
 export default defineConfig({
-  base: '/ffxiv-is-it-worth/',
+  base: '/ffxiv-gil-sniffer/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
